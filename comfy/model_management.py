@@ -1178,11 +1178,12 @@ def should_use_fp16(device=None, model_params=0, prioritize_performance=True, ma
 
 
 def should_use_bf16(device=None, model_params=0, prioritize_performance=True, manual_cast=False):
-    if device is not None:
-        if is_device_cpu(device):  # TODO ? bf16 works on CPU but is extremely slow
-            return False
-        if is_device_xla(device):
-            return True
+    if device is None:
+        device = get_torch_device()
+    if is_device_cpu(device):  # TODO ? bf16 works on CPU but is extremely slow
+        return False
+    if is_device_xla(device):
+        return True
 
     if FORCE_FP32:
         return False
